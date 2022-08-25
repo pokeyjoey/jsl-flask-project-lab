@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from settings import DATABASE, DB_USER
+from api.models import Player
 
 import psycopg2
 

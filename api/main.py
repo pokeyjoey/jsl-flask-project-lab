@@ -21,14 +21,23 @@ def get_db():
 
     return cursor
 
+def create_player(player_lst):
+    player_dict = dict(zip(Player.columns, player_lst))
+    player_object = Player(player_dict)
+
+    return player_object
 
 @app.route('/players')
 def players():
+    # get all of the players from the db
     cursor = get_db()
     cursor.execute('SELECT * FROM players')
     players =  cursor.fetchall()
 
-    return jsonify(players)
+    # create a list of player objects
+    player_objects = [create_player(player).__dict__ for player in players]
+
+    return player_objects
 
 @app.route('/players/<id>')
 def player(id):
@@ -36,6 +45,8 @@ def player(id):
     cursor.execute('SELECT * FROM players WHERE id = %s', id)
     player = cursor.fetchone()
 
-    return jsonify(player)
+    player_object = create_player(player)
+
+    return jsonify(player_object.__dict__)
 
 
